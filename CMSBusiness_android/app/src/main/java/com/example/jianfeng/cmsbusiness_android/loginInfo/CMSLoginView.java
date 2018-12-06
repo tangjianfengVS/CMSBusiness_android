@@ -43,6 +43,20 @@ public class CMSLoginView extends RelativeLayout {
     private void setupUI(){
         LayoutInflater.from(getContext()).inflate(R.layout.cmsloginview, this);
 
+        View coverview = (View)findViewById(R.id.coverView);
+        View nameText = (View)findViewById(R.id.nameText);
+        View passwordText = (View)findViewById(R.id.passwordText);
+        View topcoverview = (View)findViewById(R.id.coverTopView);
+        View lineView = (View)findViewById(R.id.lineView);
+        Button btn = (Button)findViewById(R.id.loginBtn);
+
+        coverview.setBackgroundColor(0x00000000);
+        nameText.setBackgroundColor(0x00000000);
+        passwordText.setBackgroundColor(0x00000000);
+        topcoverview.setBackgroundColor(0xAD444444);
+        lineView.setBackgroundColor(0x99ffffff);
+        btn.setBackgroundColor(0xAD444444);
+
 //        nameText = (EditText)findViewById(R.id.nameEdit);
 //        passwordText = (EditText)findViewById(R.id.passwordEdit);
 //        loginBtn = (Button)findViewById(R.id.login);
