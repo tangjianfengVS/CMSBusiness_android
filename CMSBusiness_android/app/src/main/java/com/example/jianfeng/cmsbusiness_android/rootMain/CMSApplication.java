@@ -6,4 +6,5 @@ import android.app.Application;
  * Created by jianfeng on 18/12/4.
  */
 public class CMSApplication extends Application {
+
 }

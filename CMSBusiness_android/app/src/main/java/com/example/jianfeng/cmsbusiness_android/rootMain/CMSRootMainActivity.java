@@ -1,15 +1,11 @@
 package com.example.jianfeng.cmsbusiness_android.rootMain;
 
-import android.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.Gravity;
-import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.RelativeLayout;
 
 import com.example.jianfeng.cmsbusiness_android.R;
+import com.example.jianfeng.cmsbusiness_android.hander.CMSClickHander;
 import com.example.jianfeng.cmsbusiness_android.loginInfo.CMSLoginView;
 
 public class CMSRootMainActivity extends FragmentActivity {
@@ -32,6 +28,18 @@ public class CMSRootMainActivity extends FragmentActivity {
             FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
 
             addContentView(loginView,params);
+
+            loginView.clickHander = new CMSClickHander() {
+                @Override
+                public void clickBtnHander() {
+
+                }
+
+                @Override
+                public void clickBtnHander(String name, String passwork) {
+
+                }
+            };
         }
     }
 }

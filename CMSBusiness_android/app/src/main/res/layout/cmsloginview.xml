@@ -15,8 +15,8 @@
     <ImageView
         android:id="@+id/logoImageView"
         android:scaleType= "fitXY"
-        android:layout_width="90dp"
-        android:layout_height="90dp"
+        android:layout_width="95dp"
+        android:layout_height="95dp"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="50dp"
         android:src="@mipmap/loginlogo"
@@ -27,7 +27,7 @@
         android:layout_width="250dp"
         android:layout_height="170dp"
         android:layout_centerInParent="true"
-        android:background="#FFFF00FF"
+        android:background="#000"
         />
 
     <RelativeLayout
@@ -66,7 +66,7 @@
         android:id="@+id/nameText"
         android:layout_width="50dp"
         android:layout_height="45dp"
-        android:text=" 账号"
+        android:text="   账号"
         android:textColor="#FFFFFF"
         android:layout_alignTop="@+id/coverTopView"
         android:layout_alignLeft="@+id/coverView"
@@ -79,7 +79,7 @@
         android:id="@+id/passwordText"
         android:layout_width="50dp"
         android:layout_height="45dp"
-        android:text=" 密码"
+        android:text="   密码"
         android:textColor="#FFFFFF"
         android:layout_alignBottom="@+id/coverTopView"
         android:layout_alignLeft="@+id/coverView"
@@ -95,31 +95,35 @@
         android:textColor="#FFFFFF"
         android:layout_alignTop="@+id/coverTopView"
         android:layout_alignRight="@+id/coverView"
-        android:layout_marginRight="8dp"
+        android:layout_marginRight="5dp"
         android:layout_marginTop="2.5dp"
 
         android:layout_alignLeft="@+id/nameText"
         android:layout_marginLeft="60dp"
-        android:background="#34D"
+        android:background="@null"
         android:textSize="16sp"
+        android:gravity="center"
+        android:hint="请输入账号"
+        android:maxLines = "1"
         />
 
     <EditText
         android:id="@+id/passwordEdit"
         android:layout_width="50dp"
         android:layout_height="40dp"
-
         android:textColor="#FFFFFF"
         android:layout_alignBottom="@+id/coverTopView"
-        android:layout_marginRight="8dp"
+        android:layout_marginRight="5dp"
         android:layout_marginBottom="2.5dp"
-
         android:layout_alignLeft="@+id/nameText"
         android:layout_marginLeft="60dp"
 
         android:layout_alignRight="@+id/coverView"
-        android:background="#34D"
+        android:background="@null"
+        android:gravity="center"
         android:textSize="16sp"
+        android:hint="请输入密码"
+        android:maxLines = "1"
         />
 
 </RelativeLayout>
