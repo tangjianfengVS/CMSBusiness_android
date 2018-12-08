@@ -62,7 +62,7 @@ public class CMSLoginView extends RelativeLayout {
             @Override
             public void onClick(View v) {
                 if (clickHander != null){
-                    clickHander.clickBtnHander(nameEditText.toString(),passwordEditText.toString());
+                    clickHander.clickBtnHander(nameEditText.getText().toString(),passwordEditText.getText().toString());
                 }
             }
         });
