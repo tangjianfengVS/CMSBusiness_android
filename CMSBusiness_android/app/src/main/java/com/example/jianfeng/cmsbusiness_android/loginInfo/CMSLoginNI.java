@@ -7,11 +7,19 @@ import com.example.jianfeng.cmsbusiness_android.hander.CMSLoginHander;
 import org.apache.commons.codec.binary.Hex;
 import org.json.JSONException;
 
+import java.security.KeyManagementException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+import java.security.SecureRandom;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 /**
  * Created by jianfeng on 18/12/8.
@@ -30,17 +38,14 @@ public class CMSLoginNI {
 //    }
 
 
-    private Map<String, Object> login(String username, String password, String eid, Context context,String deviceid) throws NoSuchAlgorithmException {
+    private Map<String, Object> login(String username, String password, String eid, Context context,String deviceid) throws NoSuchAlgorithmException, KeyManagementException {
         String p = password;
-
-
 
         //try {
             /** 加密类型设置 */
             MessageDigest sha = MessageDigest.getInstance("SHA-256");
             byte[] b = p.getBytes();
             sha.update(b, 0, b.length);
-
             p = new String(Hex.encodeHex(sha.digest()));
 
             Map<String, String> params = new HashMap<String, String>();
@@ -55,12 +60,14 @@ public class CMSLoginNI {
                 //params.put("deviceid","pc");
             }
 
-//            JsonRpcHttpClient client = new JsonRpcHttpClient(
-//                    new URL("https://auth.cshuanyu.com/auth"));
-//            SSLContext sslContext = SSLContext.getInstance("TLS");
+        //URL  https://auth.cshuanyu.com/auth
+
+            //JsonRpcHttpClient client = new JsonRpcHttpClient(
+                    //new URL("https://auth.cshuanyu.com/auth"));
+            SSLContext sslContext = SSLContext.getInstance("TLS");
+            sslContext.init(null, new TrustManager[]{truseAllManager}, new SecureRandom());
 
 
-//            sslContext.init(null, new TrustManager[]{truseAllManager}, new SecureRandom());
 //            client.setSslContext(sslContext);
 
 //            client.setConnectionTimeoutMillis(2000);
@@ -129,4 +136,24 @@ public class CMSLoginNI {
         return null;
     }
 
+    private static TrustManager truseAllManager = new X509TrustManager() {
+        public void checkClientTrusted(
+                X509Certificate[] arg0, String arg1)
+                throws CertificateException {
+            // TODO Auto-generated method stub
+
+        }
+
+        public void checkServerTrusted(
+                X509Certificate[] arg0, String arg1)
+                throws CertificateException {
+            // TODO Auto-generated method stub
+
+        }
+
+        public X509Certificate[] getAcceptedIssuers() {
+            // TODO Auto-generated method stub
+            return null;
+        }
+    };
 }
