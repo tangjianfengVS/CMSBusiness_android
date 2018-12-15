@@ -2,11 +2,15 @@ package com.example.jianfeng.cmsbusiness_android.loginInfo;
 
 import android.content.Context;
 
+import com.example.jianfeng.cmsbusiness_android.base.data.AuthResult;
+import com.example.jianfeng.cmsbusiness_android.base.srp.SRPAuthenticationFailedException;
+import com.example.jianfeng.cmsbusiness_android.base.srp.SRPClientSession;
+import com.example.jianfeng.cmsbusiness_android.base.srp.SRPConstants;
 import com.example.jianfeng.cmsbusiness_android.hander.CMSLoginHander;
 
 import org.apache.commons.codec.binary.Hex;
-import org.json.JSONException;
 
+import java.math.BigInteger;
 import java.security.KeyManagementException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -16,15 +20,38 @@ import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
+import okhttp3.Request;
+
 /**
  * Created by jianfeng on 18/12/8.
  */
 public class CMSLoginNI {
+
+    //private Request.Builder builder;
+
+    private Context context;
+
+//    OkHttpClient okHttpClient = new OkHttpClient.Builder()
+//            .sslSocketFactory(SSLHelper.getSSLCertifcation(context))//为OkHttp对象设置SocketFactory用于双向认证
+//            .hostnameVerifier(new UnSafeHostnameVerifier())
+//            .build();
+//
+//    Retrofit retrofit = new Retrofit.Builder()
+//            .baseUrl("https://10.2.8.56:8443")
+//            .addConverterFactory(GsonConverterFactory.create())//添加 json 转换器
+//            .addCallAdapterFactory(RxJavaCallAdapterFactory.create())//添加 RxJava 适配器
+//            .client(okHttpClient)//添加OkHttp代理对象
+//            .build();
+
+
+
+
 
     /** 登录 */
     public void loginWith(String name, String password, CMSLoginHander hander){
@@ -38,7 +65,8 @@ public class CMSLoginNI {
 //    }
 
 
-    private Map<String, Object> login(String username, String password, String eid, Context context,String deviceid) throws NoSuchAlgorithmException, KeyManagementException {
+    private Map<String, Object> login(String username, String password, String eid, Context context,String deviceid) throws NoSuchAlgorithmException, KeyManagementException, SRPAuthenticationFailedException {
+        this.context = context;
         String p = password;
 
         //try {
@@ -61,32 +89,43 @@ public class CMSLoginNI {
             }
 
         //URL  https://auth.cshuanyu.com/auth
+        //JsonRpcHttpClient client = new JsonRpcHttpClient(
+        //new URL("https://auth.cshuanyu.com/auth"));
 
-            //JsonRpcHttpClient client = new JsonRpcHttpClient(
-                    //new URL("https://auth.cshuanyu.com/auth"));
-            SSLContext sslContext = SSLContext.getInstance("TLS");
-            sslContext.init(null, new TrustManager[]{truseAllManager}, new SecureRandom());
+        //初始化全局 okhttpclient
+        CMSLoginHttpsClient client = (CMSLoginHttpsClient) new CMSLoginHttpsClient.Builder()
+                                                               .connectTimeout(20, TimeUnit.SECONDS)//设置超时时间
+                                                               .readTimeout(10, TimeUnit.SECONDS)
+                                                               .build();
+        //发送get请求
+        Request request =  new Request.Builder().get().url("https://auth.cshuanyu.com/auth").build();
 
+
+        SSLContext sslContext = SSLContext.getInstance("TLS");
+        sslContext.init(null, new TrustManager[]{truseAllManager}, new SecureRandom());
+
+        //client.setSslContext(sslContext);
 
 //            client.setSslContext(sslContext);
-
 //            client.setConnectionTimeoutMillis(2000);
-//            //账号验证
-//            AuthResult ret = client.invoke("setUser", params, AuthResult.class);
-//
-//            String s, I, B, M2;
-//
-//            s = ret.getValue("s").toString();
-//
-//            I = ret.getValue("m").toString();
-//
-//            SRPConstants c = new SRPConstants(new BigInteger(SRPConstants.N_2048[0], 16),
-//                    new BigInteger(SRPConstants.N_2048[1]));
-//            SRPClientSession session = new SRPClientSession(c, p.getBytes(), I.getBytes());
-//            session.setSalt_s(new BigInteger(s.substring(2, s.length() - 1), 16));
-//
-//            params.put("Av", session.getA().toString(16));
-//            //密码验证
+
+            //账号验证
+           // CMSLoginAuthRes ret = client.invoke("setUser", params, CMSLoginAuthRes.class);
+
+        AuthResult ret = new AuthResult();
+        String s, I, B, M2;
+
+        s = ret.getValue("s").toString();
+
+        I = ret.getValue("m").toString();
+
+        SRPConstants c = new SRPConstants(new BigInteger(SRPConstants.N_2048[0], 16), new BigInteger(SRPConstants.N_2048[1]));
+        SRPClientSession session = new SRPClientSession(c, p.getBytes(), I.getBytes());
+        session.setSalt_s(new BigInteger(s.substring(2, s.length() - 1), 16));
+
+        params.put("Av", session.getA().toString(16));
+
+        //密码验证
 //            ret = client.invoke("setA", params, AuthResult.class);
 //            B = ret.getValue("B").toString();
 //            session.setServerPublicKey_B(new BigInteger(B.substring(2, B.length() - 1), 16));
