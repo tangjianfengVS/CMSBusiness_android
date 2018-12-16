@@ -18,6 +18,12 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    // 因为jackson-core和jackson-databind有重复的文件，重复加载会报错
+    packagingOptions {
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/NOTICE'
+    }
 }
 
 dependencies {
@@ -34,13 +40,11 @@ dependencies {
     //Apache工具包方法——Hex.encodeHexString(byte[] data)
     compile files('libs/commons-codec-1.8.jar')
 
-
     //jsonrpc 依耐的 jackson，使用Jackson，主要是使用writeValueAsString和readValue这两个方法。
     //compile 'com.fasterxml.jackson.core:jackson-databind:2.7.2.pr3'
     //compile 'com.fasterxml.jackson.core:jackson-core:2.7.2.pr3'
     //compile 'com.fasterxml.jackson.core:jackson-annotations:2.7.2.pr3'
 
     //JsonRpcHttpClient
-    //compile 'com.github.briandilley.jsonrpc4j:jsonrpc4j:1.5.0'
-    //compile 'com.github.briandilley.jsonrpc4j:jsonrpc4j:1.4.6'
+    compile 'com.github.briandilley.jsonrpc4j:jsonrpc4j:1.5.0'
 }

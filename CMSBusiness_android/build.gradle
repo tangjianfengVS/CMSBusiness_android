@@ -9,10 +9,6 @@ buildscript {
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
-
-        // 因为jackson-core和jackson-databind有重复的文件，重复加载会报错
-        //exclude 'META-INF/NOTICE' // will not include NOTICE file
-        //exclude 'META-INF/LICENSE' // will not include LICENSE file
     }
 }
 
