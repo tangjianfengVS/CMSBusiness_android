@@ -3,6 +3,7 @@ package com.example.jianfeng.cmsbusiness_android.rootMain;
 import android.content.Context;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import com.example.jianfeng.cmsbusiness_android.R;
@@ -11,7 +12,6 @@ import com.example.jianfeng.cmsbusiness_android.hander.CMSLoginHander;
 import com.example.jianfeng.cmsbusiness_android.loginInfo.CMSLoginNI;
 import com.example.jianfeng.cmsbusiness_android.loginInfo.CMSLoginView;
 import com.example.jianfeng.cmsbusiness_android.loginInfo.CMSUseinfo;
-import com.example.jianfeng.cmsbusiness_android.utils.WisdomProgressHUD;
 
 public class CMSRootMainActivity extends FragmentActivity {
 
@@ -51,26 +51,45 @@ public class CMSRootMainActivity extends FragmentActivity {
                     setLoginNetwork(name,password);
                 }
             };
+        }else {
+            setCMSTabbar();
         }
     }
 
-    private void setLoginNetwork(String name, String password) {
-        loginNI = new CMSLoginNI();
+    private void setCMSTabbar(){
 
+    }
+
+    private void setLoginNetwork(String name, String password) {
+
+        loginNI = new CMSLoginNI();
         loginNI.loginWith(name, password, context, new CMSLoginHander() {
 
             @Override
             public void loginHander(Boolean res, String result) {
-
                 if (res) {
+                    Boolean hasUserInfo = CMSUseinfo.shared().resultInfo(context);
+                    if (hasUserInfo){
+                        /** 主线程UI操作 */
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
 
-
-                } else {
-
-                    
+                                runOnUiThread(
+                                    new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            ((ViewGroup)loginView.getParent()).removeView(loginView);
+                                            loginView = null;
+                                            setCMSTabbar();
+                                        }
+                                    }
+                                );
+                            }
+                        }).start();
+                    }
                 }
             }
         });
     }
-
 }

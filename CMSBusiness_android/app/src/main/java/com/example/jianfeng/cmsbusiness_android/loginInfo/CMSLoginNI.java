@@ -11,6 +11,8 @@ import com.example.jianfeng.cmsbusiness_android.utils.WisdomProgressHUD;
 import com.googlecode.jsonrpc4j.JsonRpcHttpClient;
 
 import org.apache.commons.codec.binary.Hex;
+import org.json.JSONObject;
+
 import java.math.BigInteger;
 import java.net.URL;
 import java.security.MessageDigest;
@@ -21,6 +23,7 @@ import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.StringTokenizer;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
@@ -44,11 +47,9 @@ public class CMSLoginNI {
         this.hander = hander;
 
         if (name == null || name.toString().length() == 0){
-
             WisdomProgressHUD.showError("请输入账号", context);
             return;
         }else if (password == null || password.toString().length() == 0){
-
             WisdomProgressHUD.showError("请输入密码",context);
             return;
         }
@@ -68,11 +69,9 @@ public class CMSLoginNI {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
                     WisdomProgressHUD.showError(errorStr, context);
-
                } catch (SRPAuthenticationFailedException e) {
                     e.printStackTrace();
                     WisdomProgressHUD.showError(errorStr, context);
-
                } catch (Throwable e) {
                     e.printStackTrace();
                     WisdomProgressHUD.showError(errorStr, context);
@@ -116,6 +115,11 @@ public class CMSLoginNI {
         /** 账号验证，账号信息获取 */
         AuthResult ret = client.invoke("setUser", params, AuthResult.class);
 
+        if (!ret.success){
+            WisdomProgressHUD.showError(errorStr, context);
+            return;
+        }
+
         String s, I, B, M2;
         s = ret.getValue("s").toString();
         I = ret.getValue("m").toString();
@@ -146,55 +150,53 @@ public class CMSLoginNI {
             return;
         }
 
-        /** 获取加密数据 */
-        Map<String, Object> map = new HashMap();
-        //map= client.invoke("setM1", params, LinkedHashMap.class);
-        map.put("cert", ret.getValue("cert"));
-        map.put("security", ret.getValue("security"));
-        map.put("expired", ret.getValue("expired"));
-
         String cert = ret.getValue("cert");
         String security = ret.getValue("security");
         String expired = ret.getValue("expired");
+        HashMap certM = (HashMap) transStringToMap(cert.substring(1));
+        HashMap securityM = (HashMap) transStringToMap(security.substring(1));
 
         /** 存储信息 */
+        String uidStr = securityM.get("userId").toString();
+        String cert_pass = certM.get("cert_pass").toString();
+        String cert_expired = certM.get("cert_expired").toString();
+        //String isactivate = securityM.get("isactivate").toString();
+        //String userpassword = securityM.get("userpassword").toString();
+        String loginId = securityM.get("loginId").toString();
+        String m1 = securityM.get("m1").toString();
+        String randomKey = securityM.get("randomKey").toString();
+        String seqId = securityM.get("seqId").toString();
+        String sid = securityM.get("sid").toString();
+        String skey = securityM.get("skey").toString();
+        String uin = securityM.get("uin").toString();
+        String userId = securityM.get("userId").toString();
+        String mobile = securityM.get("mobile").toString();
 
+        Map<String, Object> map = new HashMap();
+        map.put("userName", username);
+        map.put("deviceId", deviceid);
+        map.put("uidStr", uidStr);
+        map.put("cert_pass", cert_pass);
+        map.put("cert_expired", cert_expired);
+        map.put("user_expired", expired);
+        map.put("loginId", loginId);
+        map.put("m1", m1);
+        map.put("randomKey", randomKey);
+        map.put("seqId", seqId);
+        map.put("sid", sid);
+        map.put("skey", skey);
+        map.put("uin", uin);
+        map.put("userId", userId);
+        map.put("mobile", mobile);
 
+        String jsonStr =new JSONObject(map).toString();
+        Boolean res = CMSUseinfo.shared().write(jsonStr,context);
 
-
-
-
-
-
-
-
+        WisdomProgressHUD.dismiss(context);
 
         if (hander != null){
             hander.loginHander(true,"");
         }
-
-
-
-//        if (ret.getErrMsg() == null) {
-//            WisdomProgressHUD.showError(ret.getErrMsg(), context);
-
-//                //M2 = ret.getValue("M2").toString();
-////                map.put("code", M1);
-////                map.put("expired", ret.getValue("expired").toString());
-////                map.put("cert", ret.getValue("cert"));
-////                map.put("error", "");
-////            } else if(!(ret.getErrMsg().equals(""))) {
-////                map.put("code", "");
-////                map.put("expired", "");
-////                map.put("cert", null);
-////                map.put("error", ret.getErrMsg());
-////            } else {
-////                //M2 = ret.getValue("M2").toString();
-////                map.put("code", M1);
-////                map.put("expired", ret.getValue("expired").toString());
-////                map.put("cert", null);
-////                map.put("error", "");
-//        }
     }
 
     private static TrustManager truseAllManager = new X509TrustManager() {
@@ -202,14 +204,12 @@ public class CMSLoginNI {
                 X509Certificate[] arg0, String arg1)
                 throws CertificateException {
             // TODO Auto-generated method stub
-
         }
 
         public void checkServerTrusted(
                 X509Certificate[] arg0, String arg1)
                 throws CertificateException {
             // TODO Auto-generated method stub
-
         }
 
         public X509Certificate[] getAcceptedIssuers() {
@@ -217,4 +217,14 @@ public class CMSLoginNI {
             return null;
         }
     };
+
+    /** Json 转 Map */
+    public static Map transStringToMap(String mapString) {
+        Map map = new HashMap();
+        java.util.StringTokenizer items;
+        for (StringTokenizer entrys = new StringTokenizer(mapString, ","); entrys.hasMoreTokens();
+             map.put(items.nextToken().trim(), items.hasMoreTokens() ? ((Object) (items.nextToken())) : null))
+            items = new StringTokenizer(entrys.nextToken(), "=");
+        return map;
+    }
 }

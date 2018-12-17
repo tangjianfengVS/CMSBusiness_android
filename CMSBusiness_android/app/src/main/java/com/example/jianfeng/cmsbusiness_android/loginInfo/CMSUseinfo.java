@@ -15,17 +15,17 @@ import java.io.IOException;
  */
 public class CMSUseinfo {
 
-    private String uidStr;       //注册,登录            UID
+    private String uidStr;        //注册,登录            UID
 
-    private String cer_pass;     //注册,登录            CERPASSWORD
+    private String cert_pass;     //注册,登录            CERPASSWORD
 
-    private String cer_expired;  //注册,登录过期日       CEREXPIRED
+    private String cert_expired;  //注册,登录过期日       CEREXPIRED
 
-    private String isactivate;   //注册,登录有返回       ISACTIVATE
+    //private String isactivate;    //注册,登录有返回       ISACTIVATE
 
-    private String userpassword; //注册,登录有返回       USERPASSWORD
+    //private String userpassword;  //注册,登录有返回       USERPASSWORD
 
-    private String user_expired; //登录过期日           USEREXPIRED
+    private String user_expired;  //登录过期日           USEREXPIRED
 
     /** --------------security----------- */
     private String loginId;
@@ -63,51 +63,36 @@ public class CMSUseinfo {
 
     private static String FILENAME = "CMSBusines_Android.txt";
 
-
     public Boolean resultInfo(Context context) {
         /** 获取本地 */
         updateUser(context);
 
-        if (userName != null && uidStr != null &&
-            cer_pass != null && cer_expired != null &&
-            isactivate != null && userpassword != null &&
-            user_expired != null && loginId != null &&
-            m1 != null && mobile != null &&
-            randomKey != null && seqId != null &&
-            sid != null && skey != null &&
-            uin != null && userId != null) {
-
+        if (instance.userName != null && instance.uidStr != null &&
+            instance.cert_pass != null && instance.cert_expired != null &&
+            //isactivate != null && userpassword != null &&
+            instance.user_expired != null && instance.loginId != null &&
+            instance.m1 != null && instance.mobile != null &&
+            instance.randomKey != null && instance.seqId != null &&
+            instance.sid != null && instance.skey != null &&
+            instance.uin != null && instance.userId != null) {
 
             return true;
         }
         return false;
     }
 
+    /** 退出登录 */
+    public void loginOut(Context context){
+        write("",context);
+    }
 
+    /** 更新有户信息 */
     private void updateUser(Context context)  {
         String result = getReadFile(context);
 
         Gson gson = new Gson();
         CMSUseinfo info = gson.fromJson(result,CMSUseinfo.class);
-//        instance.uidStr = info.uidStr; 
-//        instance.cer_pass = info.cer_pass; 
-//        instance.cer_expired = info.cer_expired; 
-//        instance.isactivate = info.isactivate; 
-//        instance.userpassword = info.userpassword; 
-//        instance.user_expired = info.user_expired; 
 
-//        instance.loginId = info.loginId; 
-//        instance.m1 = info.m1; 
-//        instance.randomKey = info.randomKey; 
-//        instance.seqId = info.seqId; 
-//        instance.sid = info.sid; 
-//        instance.skey = info.skey; 
-//        instance.uin = info.uin; 
-//        instance.userId = info.userId; 
-//        instance.userName = info.userName;
-//        instance.mobile = info.mobile;
-//        instance.deviceId = info.deviceId;
-//        //Log.d("ddd", String.valueOf(info));
         if (info != null){
             instance = info;
         }
@@ -140,9 +125,9 @@ public class CMSUseinfo {
     }
 
     /** 内部存储 */
-    private void write(String info, Context context){
+    public Boolean write(String info, Context context){
         if (info == null){
-            return;
+            return false;
         }
 
         FileOutputStream fos = null;
@@ -151,12 +136,14 @@ public class CMSUseinfo {
             fos = context.openFileOutput(FILENAME, Context.MODE_PRIVATE);
             fos.write(info.getBytes());
             fos.close();
+            return true;
 
         }catch (FileNotFoundException e){
             e.printStackTrace();
         }catch (IOException e){
             e.printStackTrace();
         }
+        return false;
     }
 }
 
