@@ -10,6 +10,7 @@ import com.example.jianfeng.cmsbusiness_android.hander.CMSClickHander;
 import com.example.jianfeng.cmsbusiness_android.hander.CMSLoginHander;
 import com.example.jianfeng.cmsbusiness_android.loginInfo.CMSLoginNI;
 import com.example.jianfeng.cmsbusiness_android.loginInfo.CMSLoginView;
+import com.example.jianfeng.cmsbusiness_android.loginInfo.CMSUseinfo;
 import com.example.jianfeng.cmsbusiness_android.utils.WisdomProgressHUD;
 
 public class CMSRootMainActivity extends FragmentActivity {
@@ -31,7 +32,9 @@ public class CMSRootMainActivity extends FragmentActivity {
     }
 
     private void setupUI(){
-        if (true){
+        Boolean hasUserInfo = CMSUseinfo.shared().resultInfo(context);
+
+        if (!hasUserInfo){
             loginView = new CMSLoginView(this);
             FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
 
@@ -51,31 +54,20 @@ public class CMSRootMainActivity extends FragmentActivity {
         }
     }
 
-    private void setLoginNetwork(String name, String password){
-
-        if (name == null || name.toString().length() == 0){
-
-            WisdomProgressHUD.showError("请输入账号",context);
-
-        }else if (password == null || password.toString().length() == 0){
-
-            WisdomProgressHUD.showError("请输入密码",context);
-        }
-
+    private void setLoginNetwork(String name, String password) {
         loginNI = new CMSLoginNI();
 
-        WisdomProgressHUD.startLoading("正在登录",this);
+        loginNI.loginWith(name, password, context, new CMSLoginHander() {
 
-        loginNI.loginWith(name, password, new CMSLoginHander() {
             @Override
             public void loginHander(Boolean res, String result) {
 
-                if (res){
-                    WisdomProgressHUD.showSucceed("登录成功",context);
+                if (res) {
 
-                }else {
 
-                    WisdomProgressHUD.showSucceed("登录成功",context);
+                } else {
+
+                    
                 }
             }
         });

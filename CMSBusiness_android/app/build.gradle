@@ -40,11 +40,6 @@ dependencies {
     //Apache工具包方法——Hex.encodeHexString(byte[] data)
     compile files('libs/commons-codec-1.8.jar')
 
-    //jsonrpc 依耐的 jackson，使用Jackson，主要是使用writeValueAsString和readValue这两个方法。
-    //compile 'com.fasterxml.jackson.core:jackson-databind:2.7.2.pr3'
-    //compile 'com.fasterxml.jackson.core:jackson-core:2.7.2.pr3'
-    //compile 'com.fasterxml.jackson.core:jackson-annotations:2.7.2.pr3'
-
     //JsonRpcHttpClient
     compile 'com.github.briandilley.jsonrpc4j:jsonrpc4j:1.5.0'
 }
