@@ -1,6 +1,7 @@
 package com.example.jianfeng.cmsbusiness_android.rootMain;
 
 import android.content.Context;
+import android.os.Looper;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.view.ViewGroup;
@@ -86,28 +87,32 @@ public class CMSRootMainActivity extends FragmentActivity {
             @Override
             public void loginHander(Boolean res, String result) {
                 if (res) {
-                    Boolean hasUserInfo = CMSUseinfo.shared().resultInfo(context);
-                    if (hasUserInfo){
-                        /** 主线程UI操作 */
-                        new Thread(new Runnable() {
-                            @Override
-                            public void run() {
-
-                                runOnUiThread(
-                                    new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            ((ViewGroup)loginView.getParent()).removeView(loginView);
-                                            loginView = null;
-                                            setCMSTabbar();
-                                        }
-                                    }
-                                );
-                            }
-                        }).start();
-                    }
+                    mianUpdateUI();
                 }
             }
         });
+    }
+
+    private void mianUpdateUI(){
+        Boolean hasUserInfo = CMSUseinfo.shared().resultInfo(context);
+        if (hasUserInfo) {
+            /** 主线程UI操作 */
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+
+                    runOnUiThread(
+                        new Runnable() {
+                            @Override
+                            public void run() {
+                                ((ViewGroup) loginView.getParent()).removeView(loginView);
+                                loginView = null;
+                                setCMSTabbar();
+                            }
+                        }
+                    );
+                }
+            }).start();
+        }
     }
 }
