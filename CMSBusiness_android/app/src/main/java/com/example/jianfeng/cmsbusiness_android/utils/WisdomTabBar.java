@@ -23,10 +23,10 @@ import java.util.List;
  */
 public class WisdomTabBar extends RelativeLayout{
     /** 默认情况下的字体颜色 */
-    public int defaultColor = Color.DKGRAY;
+    public int defaultColor = Color.GRAY;
 
     /** 选中时的文字颜色 */
-    public int selectColor = Color.BLUE;
+    public int selectColor = Color.BLACK;
 
     /** 变量，初始化选中Item的Tag值，只在初始化起作用 */
     public int initTagNormal = 0;
@@ -59,6 +59,9 @@ public class WisdomTabBar extends RelativeLayout{
     /** 用于对Fragment进行管理 */
     private FragmentManager fragmentManager;
 
+    /** 线灰色 */
+    private final int lineColor = 0xD3D3D3;
+
     public void setOnItemMenuClick(OnItemMenuClickListener onItemMenuClickListener) {
         this.onItemMenuClickListener = onItemMenuClickListener;
     }
@@ -79,7 +82,7 @@ public class WisdomTabBar extends RelativeLayout{
         LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, screenUtils.dip2px(context, 1));
         params.addRule(RelativeLayout.ALIGN_PARENT_TOP);
 
-        lineView.setBackgroundColor(Color.RED);
+        lineView.setBackgroundColor(lineColor);
         addView(lineView,params);
     }
 
@@ -125,7 +128,7 @@ public class WisdomTabBar extends RelativeLayout{
         LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, screenUtils.dip2px(context, 1));
         params.addRule(RelativeLayout.ALIGN_PARENT_TOP);
 
-        lineView.setBackgroundColor(Color.RED);
+        lineView.setBackgroundColor(lineColor);
         addView(lineView,params);
 
         /** 根据text 数组长度实例化Item 个数*/
@@ -138,12 +141,7 @@ public class WisdomTabBar extends RelativeLayout{
             linearLayoutChild.setWeightSum(1);
             linearLayoutChild.setTag(i);
 
-            linearLayoutChild.setBackgroundColor(Color.YELLOW);
-            if (i == 1){
-                linearLayoutChild.setBackgroundColor(Color.WHITE);
-            }else if (i == 2){
-                linearLayoutChild.setBackgroundColor(Color.GREEN);
-            }
+            linearLayoutChild.setBackgroundColor(Color.WHITE);
 
             /** 实例化图标 */
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(screenUtils.dip2px(context, 23),screenUtils.dip2px(context, 23));
