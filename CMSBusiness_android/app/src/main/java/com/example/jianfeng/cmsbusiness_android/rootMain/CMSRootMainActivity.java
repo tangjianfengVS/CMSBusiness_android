@@ -5,13 +5,19 @@ import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 
 import com.example.jianfeng.cmsbusiness_android.R;
+import com.example.jianfeng.cmsbusiness_android.contacts.CMSContactsFragment;
 import com.example.jianfeng.cmsbusiness_android.hander.CMSClickHander;
 import com.example.jianfeng.cmsbusiness_android.hander.CMSLoginHander;
 import com.example.jianfeng.cmsbusiness_android.loginInfo.CMSLoginNI;
 import com.example.jianfeng.cmsbusiness_android.loginInfo.CMSLoginView;
 import com.example.jianfeng.cmsbusiness_android.loginInfo.CMSUseinfo;
+import com.example.jianfeng.cmsbusiness_android.message.CMSMessageFragment;
+import com.example.jianfeng.cmsbusiness_android.mine.CMSMineFragment;
+import com.example.jianfeng.cmsbusiness_android.utils.WisdomScreenUtils;
+import com.example.jianfeng.cmsbusiness_android.utils.WisdomTabBar;
 
 public class CMSRootMainActivity extends FragmentActivity {
 
@@ -21,12 +27,18 @@ public class CMSRootMainActivity extends FragmentActivity {
 
     private CMSLoginNI loginNI;
 
+    private LinearLayout tabBarLayout;
+
+    private WisdomTabBar tabBar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cmsroot_main);
 
         context = this;
+
+        tabBarLayout = (LinearLayout)findViewById(R.id.wisdomTabbar);
 
         setupUI();
     }
@@ -57,6 +69,14 @@ public class CMSRootMainActivity extends FragmentActivity {
     }
 
     private void setCMSTabbar(){
+        WisdomScreenUtils screenUtils = new WisdomScreenUtils();
+
+        tabBar = new WisdomTabBar(context, getFragmentManager());
+        tabBar.register(CMSMessageFragment.class, R.mipmap.success, R.mipmap.success, "消息" ,R.id.fragmentLayout);
+        tabBar.register(CMSContactsFragment.class, R.mipmap.success, R.mipmap.success, "通讯录",R.id.fragmentLayout);
+        tabBar.register(CMSMineFragment.class, R.mipmap.success, R.mipmap.success, "我的", R.id.fragmentLayout).setup();
+
+        tabBarLayout.addView(tabBar,screenUtils.getScreenWidthPixels(context),screenUtils.dip2px(context,49));
 
     }
 
