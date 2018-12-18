@@ -88,7 +88,7 @@ public class WisdomTabBar extends RelativeLayout{
     }
 
     /** 注册  */
-    public WisdomTabBar register(Class fragmentClass, int iconNormal,int iconSelect, String text, @IdRes int containerViewId){
+    public void register(Class fragmentClass, int iconNormal,int iconSelect, String text, @IdRes int containerViewId){
         textList.add(text);
         iconNormalList.add(iconNormal);
         iconSelectList.add(iconSelect);
@@ -111,7 +111,6 @@ public class WisdomTabBar extends RelativeLayout{
             e.printStackTrace();
         }
         tran.commit();
-        return this;
     }
 
     /** 注册完成,展示 */

@@ -14,13 +14,12 @@
     </RelativeLayout>
 
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/wisdomTabbar"
         android:layout_width="match_parent"
         android:layout_height="49dp"
         android:layout_alignParentBottom="true"
-        android:orientation="vertical"
         android:background="#DA70D6">
-    </LinearLayout>
+    </RelativeLayout>
 
 </RelativeLayout>

@@ -5,7 +5,7 @@ import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import com.example.jianfeng.cmsbusiness_android.R;
 import com.example.jianfeng.cmsbusiness_android.contacts.CMSContactsFragment;
@@ -27,7 +27,7 @@ public class CMSRootMainActivity extends FragmentActivity {
 
     private CMSLoginNI loginNI;
 
-    private LinearLayout tabBarLayout;
+    private RelativeLayout tabBarLayout;
 
     private WisdomTabBar tabBar;
 
@@ -35,10 +35,8 @@ public class CMSRootMainActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cmsroot_main);
-
         context = this;
-
-        tabBarLayout = (LinearLayout)findViewById(R.id.wisdomTabbar);
+        tabBarLayout = (RelativeLayout)findViewById(R.id.wisdomTabbar);
 
         setupUI();
     }
@@ -49,7 +47,6 @@ public class CMSRootMainActivity extends FragmentActivity {
         if (!hasUserInfo){
             loginView = new CMSLoginView(this);
             FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
-
             addContentView(loginView,params);
 
             loginView.clickHander = new CMSClickHander() {
@@ -74,9 +71,10 @@ public class CMSRootMainActivity extends FragmentActivity {
         tabBar = new WisdomTabBar(context, getFragmentManager());
         tabBar.register(CMSMessageFragment.class, R.mipmap.success, R.mipmap.success, "消息" ,R.id.fragmentLayout);
         tabBar.register(CMSContactsFragment.class, R.mipmap.success, R.mipmap.success, "通讯录",R.id.fragmentLayout);
-        tabBar.register(CMSMineFragment.class, R.mipmap.success, R.mipmap.success, "我的", R.id.fragmentLayout).setup();
+        tabBar.register(CMSMineFragment.class, R.mipmap.success, R.mipmap.success, "我的", R.id.fragmentLayout);
+        tabBar.setup();
 
-        tabBarLayout.addView(tabBar,screenUtils.getScreenWidthPixels(context),screenUtils.dip2px(context,49));
+        tabBarLayout.addView(tabBar, screenUtils.getScreenWidthPixels(context), screenUtils.dip2px(context, 49));
 
     }
 
