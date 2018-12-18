@@ -1,7 +1,6 @@
 package com.example.jianfeng.cmsbusiness_android.rootMain;
 
 import android.content.Context;
-import android.os.Looper;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.view.ViewGroup;
