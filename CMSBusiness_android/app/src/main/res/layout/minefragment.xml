@@ -4,7 +4,6 @@
     android:layout_height="match_parent"
     android:background="#7FFFD4">
 
-
     <ImageView
         android:id="@+id/headerImageView"
         android:layout_width="match_parent"
@@ -13,13 +12,73 @@
         android:src="@mipmap/mineheaderbg"
         />
 
+    <ImageView
+        android:id="@+id/iocnImageView"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:scaleType="fitXY"
+        android:src="@mipmap/loginlogo"
+
+        android:layout_alignLeft="@+id/headerImageView"
+        android:layout_marginLeft="15dp"
+        android:layout_alignBottom="@+id/headerImageView"
+        android:layout_marginBottom="12dp"
+        />
+
     <TextView
-        android:id="@+id/TextView"
+        android:id="@+id/nameText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
+
+        android:layout_alignLeft="@+id/iocnImageView"
+        android:layout_marginLeft="58dp"
+        android:layout_alignTop="@+id/iocnImageView"
+        android:layout_marginTop="5dp"
+
         android:textColor="#ffffff"
-        android:textSize="48dp"
-        android:text="CMSMine"/>
+        android:textSize="14dp"
+        android:text="昵称"/>
+
+    <TextView
+        android:id="@+id/phoneText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_alignLeft="@+id/iocnImageView"
+        android:layout_marginLeft="58dp"
+        android:layout_alignBottom="@+id/iocnImageView"
+        android:layout_marginBottom="3dp"
+
+        android:textColor="#ffffff"
+        android:textSize="14dp"
+        android:text="手机号码"/>
+
+    <ImageView
+        android:id="@+id/arrowImageView"
+        android:layout_width="10dp"
+        android:layout_height="16dp"
+        android:scaleType="fitXY"
+        android:src="@mipmap/arrowbg"
+
+        android:layout_alignRight="@+id/headerImageView"
+        android:layout_marginRight="15dp"
+
+        android:layout_alignBottom="@+id/headerImageView"
+        android:layout_marginBottom="24dp"
+        />
+
+    <Button
+        android:id="@+id/pushBtn"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+
+        android:layout_alignRight="@+id/headerImageView"
+        android:layout_marginRight="10dp"
+
+        android:layout_alignBottom="@+id/headerImageView"
+        android:layout_marginBottom="15dp"
+        android:background="#88FFFFFF"
+        />
+
 
 </RelativeLayout>
