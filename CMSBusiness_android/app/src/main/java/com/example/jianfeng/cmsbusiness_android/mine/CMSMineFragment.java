@@ -1,6 +1,5 @@
 package com.example.jianfeng.cmsbusiness_android.mine;
 
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.view.LayoutInflater;
@@ -15,8 +14,6 @@ import android.widget.Toast;
 import com.example.jianfeng.cmsbusiness_android.R;
 import com.example.jianfeng.cmsbusiness_android.loginInfo.CMSUseinfo;
 import com.example.jianfeng.cmsbusiness_android.utils.WisdomScreenUtils;
-
-import org.w3c.dom.Text;
 
 import java.math.BigDecimal;
 
