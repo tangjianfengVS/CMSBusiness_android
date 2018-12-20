@@ -1,15 +1,22 @@
 package com.example.jianfeng.cmsbusiness_android.mine;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.jianfeng.cmsbusiness_android.R;
+import com.example.jianfeng.cmsbusiness_android.loginInfo.CMSUseinfo;
 import com.example.jianfeng.cmsbusiness_android.utils.WisdomScreenUtils;
+
+import org.w3c.dom.Text;
 
 import java.math.BigDecimal;
 
@@ -17,6 +24,11 @@ import java.math.BigDecimal;
  * Created by jianfeng on 18/12/18.
  */
 public class CMSMineFragment extends Fragment {
+    private TextView nameText;
+
+    private TextView phoneText;
+
+    private Button pushBtn;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -33,6 +45,23 @@ public class CMSMineFragment extends Fragment {
         WisdomScreenUtils screenUtils = new WisdomScreenUtils();
         double height = div(9,16,2) * screenUtils.getScreenWidthPixels(getContext());
         layoutParamsIocn.height = (int) height;
+
+        nameText = (TextView)view.findViewById(R.id.nameText);
+        phoneText = (TextView)view.findViewById(R.id.phoneText);
+        pushBtn = (Button)view.findViewById(R.id.pushBtn);
+
+        String name = CMSUseinfo.shared().uidStr;
+        String mobile = CMSUseinfo.shared().mobile;
+        nameText.setText(name);
+        phoneText.setText(mobile);
+
+        pushBtn.setOnClickListener(new View.OnClickListener() {
+            int i = 0;
+            public void onClick(View v) {
+                Toast toast = Toast.makeText(getContext(),"你点击了", Toast.LENGTH_LONG);
+                toast.show();
+            }
+        });
         return view;
     }
 

@@ -15,40 +15,40 @@ import java.io.IOException;
  */
 public class CMSUseinfo {
 
-    private String uidStr;        //注册,登录            UID
+    public String uidStr;        //注册,登录            UID
 
-    private String cert_pass;     //注册,登录            CERPASSWORD
+    public String cert_pass;     //注册,登录            CERPASSWORD
 
-    private String cert_expired;  //注册,登录过期日       CEREXPIRED
+    public String cert_expired;  //注册,登录过期日       CEREXPIRED
 
     //private String isactivate;    //注册,登录有返回       ISACTIVATE
 
     //private String userpassword;  //注册,登录有返回       USERPASSWORD
 
-    private String user_expired;  //登录过期日           USEREXPIRED
+    public String user_expired;  //登录过期日           USEREXPIRED
 
     /** --------------security----------- */
-    private String loginId;
+    public String loginId;
 
-    private String m1;
+    public String m1;
 
-    private String randomKey;
+    public String randomKey;
 
-    private String seqId;
+    public String seqId;
 
-    private String sid;
+    public String sid;
 
-    private String skey;
+    public String skey;
 
-    private String uin;
+    public String uin;
 
-    private String userId;
+    public String userId;
 
-    private String userName;
+    public String userName;
 
-    private String mobile;
+    public String mobile;
 
-    private String deviceId;
+    public String deviceId;
 
     private static CMSUseinfo instance = null;
 
