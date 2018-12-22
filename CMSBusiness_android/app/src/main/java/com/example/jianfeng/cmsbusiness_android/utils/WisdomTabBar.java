@@ -60,7 +60,7 @@ public class WisdomTabBar extends RelativeLayout{
     private FragmentManager fragmentManager;
 
     /** 线灰色 */
-    private final int lineColor = 0xD3D3D3;
+    private final int lineColor = Color.LTGRAY;
 
     public void setOnItemMenuClick(OnItemMenuClickListener onItemMenuClickListener) {
         this.onItemMenuClickListener = onItemMenuClickListener;
@@ -125,7 +125,7 @@ public class WisdomTabBar extends RelativeLayout{
         selectTag = initTagNormal;
 
         RelativeLayout lineView = new RelativeLayout(context);
-        LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, screenUtils.dip2px(context, 1));
+        LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, screenUtils.dip2px(context, (float) 0.6));
         params.addRule(RelativeLayout.ALIGN_PARENT_TOP);
 
         lineView.setBackgroundColor(lineColor);

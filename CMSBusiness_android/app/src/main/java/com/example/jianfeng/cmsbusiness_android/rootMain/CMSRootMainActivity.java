@@ -31,6 +31,11 @@ public class CMSRootMainActivity extends FragmentActivity {
 
     private WisdomTabBar tabBar;
 
+    private String ip = "222.66.158.238";
+
+    private int port = 61613;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,6 +95,10 @@ public class CMSRootMainActivity extends FragmentActivity {
                 }
             }
         });
+    }
+
+    private void setIM(){
+
     }
 
     private void mianUpdateUI(){
