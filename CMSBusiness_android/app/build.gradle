@@ -46,6 +46,10 @@ dependencies {
     //im引用进来
     compile files('libs/cms-im-core-1.0-20180427.084044-43.jar')
 
-    //SimpleChannelInboundHandler
+    //IM第三方框架
     compile 'io.netty:netty-all:4.1.8.Final'
+
+    //guava-20.0引用进来
+    compile files('libs/guava-20.0.jar')
+
 }

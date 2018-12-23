@@ -1,122 +1,139 @@
 package com.example.jianfeng.cmsbusiness_android.im.helper;
 
 import android.content.Context;
-import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
-//import com.admin.cmsandroid.ui.im.MainActivity;
-//import com.admin.cmsandroid.dao.CMSConstants;
-//import com.admin.cmsandroid.dao.CMSSQLiteHelper;
-//import com.admin.cmsandroid.im.ClientManager;
-//import com.admin.cmsandroid.utils.RandomUtil;
-//import com.admin.cmsandroid.utils.ToolAlert;
-//import com.orhanobut.logger.Logger;
-//import com.pythonsh.common.ApplicationException;
-//import com.pythonsh.common.ClientVersion;
-//import com.pythonsh.common.Constant;
-//import com.pythonsh.common.KeyBean;
-//import com.pythonsh.common.adaptor.IMInitAdaptor;
-//import com.pythonsh.common.adaptor.InvokeAdaptor;
-//import com.pythonsh.common.adaptor.SendMsgAdaptor;
-//import com.pythonsh.common.adaptor.SyncAdaptor;
-//import com.pythonsh.common.codec.coder.Encoder;
-//import com.pythonsh.common.codec.compressor.Compressor;
-//import com.pythonsh.common.payload.BasePayloadMap;
-//import com.pythonsh.common.payload.Group;
-//import com.pythonsh.common.payload.GroupUser;
-//import com.pythonsh.common.payload.event.ContactEvent;
-//import com.pythonsh.common.payload.event.GroupEvent;
-//import com.pythonsh.common.payload.message.MessageImage;
-//import com.pythonsh.common.payload.message.MessageText;
-//import com.pythonsh.common.payload.message.MessageVoice;
-//import com.pythonsh.common.payload.pojos.BaseRequest;
-//import com.pythonsh.common.payload.pojos.PojosConstants;
-//import com.pythonsh.common.utils.BytesUtils;
+import com.example.jianfeng.cmsbusiness_android.im.ClientManager;
+import com.example.jianfeng.cmsbusiness_android.loginInfo.CMSUseinfo;
+import com.pythonsh.common.ApplicationException;
+import com.pythonsh.common.ClientVersion;
+import com.pythonsh.common.Constant;
+import com.pythonsh.common.KeyBean;
+import com.pythonsh.common.adaptor.IMInitAdaptor;
+import com.pythonsh.common.codec.coder.Encoder;
+import com.pythonsh.common.codec.compressor.Compressor;
+import com.pythonsh.common.payload.BasePayloadMap;
+import com.pythonsh.common.payload.pojos.BaseRequest;
+import com.pythonsh.common.payload.pojos.PojosConstants;
+import com.pythonsh.common.utils.BytesUtils;
 
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
  * Created by dt on 2017/12/20.
  */
 public class ImHelper {
-//
-//    private static final String TAG = "ImHelper";
-//    private static String skey = "";
-//    private static String deviceid = "";
-//    private static String uin = "";
-//
-//    public static int major = 2;
-//    public static int minor = 3;
-//    public static int build = 16;
-//    //查询报价内容 查询审批内容
-//    public static String ThriftServiceId = "20171208112330";
-//    //提交报价  提交绑定公司
-//    public static String SeedServiceId = "2A3874019EFFA0CEE05001A8A90623EF";
-//    //入库
-//    public static String StorageServiceId = "2CE5DEB098T7RF54E05001A8A90612CA";
-//    //质检
-//    public static String CheckServiceId = "2BCB1B13DF7727E5E05001A8A906271B";
-//    //条码
-//    public static String BarcodeServiceid = "20180124100540";
-//    //    DEFAULT_MODE
-////    private static byte DEFAULT_MODE = Constant.DEFAULT_MODE;
-//    private static byte DEFAULT_MODE = Constant.MODE_PRO;
-//
-//    //初始化
-//    public static void Iminit(Context context) {
-//        if (isNetworkConnected(context) == true) {
-//            CMSSQLiteHelper helper = new CMSSQLiteHelper(context, null, CMSConstants.CMS_DB_VERSION);
-//            Map user = helper.getImUser();
-//            skey = (String) user.get("skey");
-//            deviceid = (String) user.get("deviceid");
-//            uin = (String) user.get("uin");
-//
-//
+
+    private String ip = "222.66.158.238";
+
+    private int port = 61613;
+
+    private static final String TAG = "ImHelper";
+    private static String skey = "";
+    private static String deviceid = "";
+    private static String uin = "";
+
+    public static int major = 2;
+    public static int minor = 3;
+    public static int build = 16;
+    //查询报价内容 查询审批内容
+    public static String ThriftServiceId = "20171208112330";
+    //提交报价  提交绑定公司
+    public static String SeedServiceId = "2A3874019EFFA0CEE05001A8A90623EF";
+    //入库
+    public static String StorageServiceId = "2CE5DEB098T7RF54E05001A8A90612CA";
+    //质检
+    public static String CheckServiceId = "2BCB1B13DF7727E5E05001A8A906271B";
+    //条码
+    public static String BarcodeServiceid = "20180124100540";
+    //    DEFAULT_MODE
+    //private static byte DEFAULT_MODE = Constant.DEFAULT_MODE;
+    private static byte DEFAULT_MODE = Constant.MODE_PRO;
+
+    private static ImHelper instance = null;
+
+    private ImHelper(){}
+
+    public static ImHelper shared(){
+        if (instance == null){
+            instance = new ImHelper();
+        }
+        return instance;
+    }
+
+    /** 开启连接 */
+    public void connect(){
+
+        try {
+            //开启连接
+            ClientManager.start(ip, port);
+
+        }catch (InterruptedException e){
+
+            e.printStackTrace();
+        }
+    }
+
+
+
+
+    //初始化
+    public static void Iminit(Context context) {
+        if (isNetworkConnected(context) == true) {
+
+            String skeyS = CMSUseinfo.shared().skey;
+            String uinS = CMSUseinfo.shared().uin;
+            String sidS = CMSUseinfo.shared().sid;
+            String seqidS = CMSUseinfo.shared().seqId;
+            String randomkeyS = CMSUseinfo.shared().randomKey;
+
+            skey = skeyS;
+            deviceid = CMSUseinfo.shared().deviceId;
+            uin = uinS;
+
 //            MainActivity.M1 = (String) user.get("token");
 //            MainActivity.sid = (String) user.get("sid");
 //            MainActivity.randomkey = (String) user.get("randomkey");
 //            MainActivity.secureid = Integer.parseInt(user.get("seqid").toString());
-////
-////            deviceid = "-" + RandomUtil.getStringRandom(12);
-//            Logger.i("deviceid", "user----" + user.toString());
-//            BaseRequest r = new BaseRequest();
-//            r.setUin(uin);
-//            r.setSkey(skey);
-//            r.setDeviceID(deviceid);
-//            r.setSid(user.get("sid").toString());
-//            Map payloadss = new BasePayloadMap();
 //
-//            KeyBean bean = new KeyBean();
-//            bean.setSecureId(Integer.parseInt(user.get("seqid").toString()));
-//            bean.setRandomKey(user.get("randomkey").toString());
-//            payloadss.put(PojosConstants.PAYLOAD_BASEREQUEST, r);
-//            payloadss.put("ClientVersion", new ClientVersion(major, minor, build).getVersion());
-//
-//            IMInitAdaptor p = new IMInitAdaptor(null);
-//            p.initHeader(Constant.HEADER_SECUREID, BytesUtils.intToByteArray(bean.getSecureId()));
-//            p.initHeader(Constant.HEADER_ENCODER, BytesUtils.shortToByteArray(Encoder.ENCODE_AES128));
-//            p.initHeader(Constant.HEADER_COMPRESSOR, BytesUtils.shortToByteArray(Compressor.COMPRESSOR_LZ4));
-//            p.initHeader(Constant.HEADER_MODE, new byte[]{DEFAULT_MODE});
-//            p.initOption(Constant.OPTION_ENCODER, true);
-//            p.initOption(Constant.OPTION_COMPRESSOR, true);
-//            p.setKeyMap(bean.toMap());
-//            p.setPayloadMap(payloadss);
-//
-//            try {
-//                ClientManager.write(p);
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            } catch (ApplicationException e) {
-//                e.printStackTrace();
-//            }
-//        } else {
-//            ToolAlert.showToast(context, "当前无网络，请连接网络!", false);
-//        }
-//    }
-//
+//            deviceid = "-" + RandomUtil.getStringRandom(12);
+            //Logger.i("deviceid", "user----" + user.toString());
+            BaseRequest r = new BaseRequest();
+            r.setUin(uin);
+            r.setSkey(skey);
+            r.setDeviceID(deviceid);
+            r.setSid(sidS);
+            Map payloadss = new BasePayloadMap();
+
+            KeyBean bean = new KeyBean();
+            bean.setSecureId(Integer.parseInt(seqidS));
+            bean.setRandomKey(randomkeyS);
+            payloadss.put(PojosConstants.PAYLOAD_BASEREQUEST, r);
+            payloadss.put("ClientVersion", new ClientVersion(major, minor, build).getVersion());
+
+            IMInitAdaptor p = new IMInitAdaptor(null);
+            p.initHeader(Constant.HEADER_SECUREID, BytesUtils.intToByteArray(bean.getSecureId()));
+            p.initHeader(Constant.HEADER_ENCODER, BytesUtils.shortToByteArray(Encoder.ENCODE_AES128));
+            p.initHeader(Constant.HEADER_COMPRESSOR, BytesUtils.shortToByteArray(Compressor.COMPRESSOR_LZ4));
+            p.initHeader(Constant.HEADER_MODE, new byte[]{DEFAULT_MODE});
+            p.initOption(Constant.OPTION_ENCODER, true);
+            p.initOption(Constant.OPTION_COMPRESSOR, true);
+            p.setKeyMap(bean.toMap());
+            p.setPayloadMap(payloadss);
+
+            try {
+                ClientManager.write(p);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ApplicationException e) {
+                e.printStackTrace();
+            }
+        } else {
+            //ToolAlert.showToast(context, "当前无网络，请连接网络!", false);
+        }
+    }
+
 //    //服务调用seed
 //    public static void ImInvokeSeed(String method, List<Map> list, String serviceId, Context context) {
 //        if (isNetworkConnected(context) == true) {
@@ -223,9 +240,9 @@ public class ImHelper {
 //        }
 //    }
 //
-//    //消息获取
-//    public static void ImSync() {
-//        if (!skey.equals("")) {
+    //消息获取
+    public static void ImSync() {
+        if (!skey.equals("")) {
 //            if (MainActivity.keys != null && MainActivity.keys.size() > 0) {
 //                if (!MainActivity.keys.get(0).get("Val").toString().equals("-1")) {
 //                    BaseRequest aaa = new BaseRequest();
@@ -260,10 +277,10 @@ public class ImHelper {
 //                    }
 //                }
 //            }
-//        }
-//    }
-//
-//
+        }
+    }
+
+
 //    //发送消息
 //    public static void ImSend(String content, String to, Context context) {
 //        if (isNetworkConnected(context) == true) {
@@ -511,18 +528,18 @@ public class ImHelper {
 //            ToolAlert.showToast(context, "当前无网络，请连接网络!", false);
 //        }
 //    }
-//
-//
-//    //当前是否有网络
-//    public static boolean isNetworkConnected(Context context) {
-//        if (context != null) {
-//            ConnectivityManager mConnectivityManager = (ConnectivityManager) context
-//                    .getSystemService(Context.CONNECTIVITY_SERVICE);
-//            NetworkInfo mNetworkInfo = mConnectivityManager.getActiveNetworkInfo();
-//            if (mNetworkInfo != null) {
-//                return mNetworkInfo.isAvailable();
-//            }
-//        }
-//        return false;
-//    }
+
+
+    //当前是否有网络
+    public static boolean isNetworkConnected(Context context) {
+        if (context != null) {
+            ConnectivityManager mConnectivityManager = (ConnectivityManager) context
+                    .getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo mNetworkInfo = mConnectivityManager.getActiveNetworkInfo();
+            if (mNetworkInfo != null) {
+                return mNetworkInfo.isAvailable();
+            }
+        }
+        return false;
+    }
 }

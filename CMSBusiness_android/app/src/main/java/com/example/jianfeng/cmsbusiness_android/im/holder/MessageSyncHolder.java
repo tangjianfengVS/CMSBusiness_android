@@ -3,17 +3,13 @@ package com.example.jianfeng.cmsbusiness_android.im.holder;
 
 import android.content.Intent;
 
-//import com.admin.cmsandroid.ui.im.MainActivity;
-//import com.admin.cmsandroid.base.MyApplication;
-//import com.admin.cmsandroid.im.HeartbeatManager;
-//import com.admin.cmsandroid.im.PayloadtoMap;
-//import com.admin.cmsandroid.im.helper.ImHelper;
-//import com.google.common.util.concurrent.ListenableFuture;
-//import com.google.common.util.concurrent.ListeningExecutorService;
-//import com.google.common.util.concurrent.MoreExecutors;
-//import com.orhanobut.logger.Logger;
-//import com.pythonsh.common.KeyBean;
-//import com.pythonsh.common.RawPacket;
+import com.example.jianfeng.cmsbusiness_android.im.HeartbeatManager;
+import com.example.jianfeng.cmsbusiness_android.im.PayloadtoMap;
+import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.ListeningExecutorService;
+import com.google.common.util.concurrent.MoreExecutors;
+import com.pythonsh.common.KeyBean;
+import com.pythonsh.common.RawPacket;
 
 import java.io.Serializable;
 import java.util.List;
@@ -28,19 +24,21 @@ public class MessageSyncHolder extends MessageHolder {
 
     private static final String TAG = "MessageSyncHolder";
 
-//    public MessageSyncHolder(RawPacket rawPacket, HeartbeatManager counter) {
-//        super(rawPacket, counter);
-//    }
-//
-//    @Override
-//    public ListenableFuture<Boolean> process() {
-//        ListeningExecutorService executorService = MoreExecutors.listeningDecorator(Executors.newSingleThreadExecutor());
-//        return executorService.submit(new Callable<Boolean>() {
-//            public Boolean call() throws Exception {
-//                Intent intent = new Intent();
-//                intent.setAction("sync");
-//                PayloadtoMap payloadtoMap = new PayloadtoMap(rawPacket);
-//                KeyBean bean = new KeyBean();
+    public MessageSyncHolder(RawPacket rawPacket, HeartbeatManager counter) {
+        super(rawPacket, counter);
+    }
+
+    @Override
+    public ListenableFuture<Boolean> process() {
+        ListeningExecutorService executorService = MoreExecutors.listeningDecorator(Executors.newSingleThreadExecutor());
+        return executorService.submit(new Callable<Boolean>() {
+            public Boolean call() throws Exception {
+                Intent intent = new Intent();
+                intent.setAction("sync");
+                PayloadtoMap payloadtoMap = new PayloadtoMap(rawPacket);
+                KeyBean bean = new KeyBean();
+
+                //-----------我注释-------
 //                bean.setSecureId(MainActivity.secureid);
 //                bean.setRandomKey(MainActivity.randomkey);
 //                payloadtoMap.setKeyMap(bean.toMap());
@@ -58,7 +56,7 @@ public class MessageSyncHolder extends MessageHolder {
 ////                map2.put("option","batch");
 ////                map2.put("data",map1);
 ////                ImHelper.ImInvokeThrift("20171208112330","factoryDetailManage",map2);
-//                Logger.i(TAG, map.toString());
+////                Logger.i(TAG, map.toString());
 //                if (map.size() > 1) {
 //                    if (map.get("Msg").toString().length() > 2) {
 //                        MainActivity.keys = (List) map.get("SyncKey");
@@ -68,9 +66,11 @@ public class MessageSyncHolder extends MessageHolder {
 //                        MyApplication.getContext().sendBroadcast(intent);
 //                    }
 //                }
-//                return true;
-//
-//            }
-//        });
-//    }
+
+                //---------------
+                return true;
+
+            }
+        });
+    }
 }
