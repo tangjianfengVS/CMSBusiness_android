@@ -5,6 +5,7 @@ import android.content.Intent;
 import com.example.jianfeng.cmsbusiness_android.im.HeartbeatManager;
 import com.example.jianfeng.cmsbusiness_android.im.PayloadtoMap;
 import com.example.jianfeng.cmsbusiness_android.im.helper.ImHelper;
+import com.example.jianfeng.cmsbusiness_android.rootMain.CMSRootMainActivity;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
@@ -15,8 +16,11 @@ import java.io.Serializable;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 
+
+
 /**
  * Created by oracle on 2017/11/15.
+ * IM 同步用户信息
  */
 public class MessageInitHolder extends MessageHolder {
     private static final String TAG = "MessageInitHolder";
@@ -33,22 +37,22 @@ public class MessageInitHolder extends MessageHolder {
                 PayloadtoMap payloadtoMap = new PayloadtoMap(rawPacket);
                 KeyBean bean = new KeyBean();
                 ///---------我注释-------
-//                bean.setSecureId(MainActivity.secureid);
-//                bean.setRandomKey(MainActivity.randomkey);
-//                payloadtoMap.setKeyMap(bean.toMap());
-//                Intent intent = new Intent();
-//                intent.setAction("com.admin.cmsandroid.init");
-//                try {
-//                    payloadtoMap.preRead(null);
-////                    Logger.i(TAG, payloadtoMap.getPayloadMap().toString());
-//                    intent.putExtra("init", (Serializable) payloadtoMap.getPayloadMap());
-//
-//                } catch (Exception NullPointerException) {
+                bean.setSecureId(388);//MainActivity.secureid);
+                bean.setRandomKey("q4hynprjkoq1in4z");//MainActivity.randomkey);
+                payloadtoMap.setKeyMap(bean.toMap());
+                Intent intent = new Intent();
+                intent.setAction("com.admin.cmsbusiness_android.IMINIT");
+                try {
+                    payloadtoMap.preRead(null);
+//                    Logger.i(TAG, payloadtoMap.getPayloadMap().toString());
+                    intent.putExtra("init", (Serializable) payloadtoMap.getPayloadMap());
+
+                } catch (Exception NullPointerException) {
 //                    ImHelper.Iminit(MyApplication.getContext());
-//                    intent.putExtra("msg", "网络请求超时");
-//                }
-//                intent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND);
-//                MyApplication.getContext().sendBroadcast(intent);
+                    intent.putExtra("msg", "网络请求超时");
+                }
+                intent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND);
+                CMSRootMainActivity.getContext().sendBroadcast(intent);
                 //------------------
 
 //                if (payloadtoMap.getPayloadMap().containsKey("SupAlias")) {

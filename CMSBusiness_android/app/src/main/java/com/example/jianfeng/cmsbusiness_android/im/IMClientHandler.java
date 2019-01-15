@@ -3,6 +3,8 @@ package com.example.jianfeng.cmsbusiness_android.im;
 import com.example.jianfeng.cmsbusiness_android.im.helper.ImHelper;
 import com.example.jianfeng.cmsbusiness_android.im.holder.MessageHolder;
 import com.example.jianfeng.cmsbusiness_android.im.holder.MessageHolderFactory;
+import com.google.common.util.concurrent.FutureCallback;
+import com.google.common.util.concurrent.Futures;
 import com.pythonsh.common.ApplicationException;
 import com.pythonsh.common.RawPacket;
 import com.pythonsh.common.adaptor.PingAdaptor;
@@ -14,6 +16,7 @@ import io.netty.handler.timeout.IdleStateEvent;
 
 /**
  * Created by oracle on 2017/10/8.
+ * 处理连接数据回调
  */
 public class IMClientHandler extends SimpleChannelInboundHandler<RawPacket> {
 
@@ -29,34 +32,37 @@ public class IMClientHandler extends SimpleChannelInboundHandler<RawPacket> {
     @Override
     protected void channelRead0(ChannelHandlerContext channelHandlerContext, RawPacket rawPacket) throws Exception {
         if (rawPacket == null) {
-
             return;
         }
+
+        //push,主动拉取指令
         if (rawPacket.getOptrType() == 129) {
             ImHelper.ImSync();
         }
-        MessageHolder holder = MessageHolderFactory.create(rawPacket, heartbeatManager);
 
-        if (holder == null) return;
+        MessageHolder holder = MessageHolderFactory.create(rawPacket, heartbeatManager);
+        if (holder == null) {
+            return;
+        }
 
         processHolder(holder);
-
     }
 
     private void processHolder(final MessageHolder holder) {
         Futures.addCallback(holder.process(),
-                new FutureCallback<Boolean>() {
-                    public void onSuccess(Boolean aBoolean) {
+            new FutureCallback<Boolean>() {
+                public void onSuccess(Boolean aBoolean) {
 
 
-                    }
+                }
 
-                    public void onFailure(Throwable throwable) {
-                        throwable.printStackTrace();
-                    }
-                });
+                public void onFailure(Throwable throwable) {
+                    throwable.printStackTrace();
+                }
+            });
     }
 
+    //利用写空闲发送心跳检测消息
     @Override
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
         // IdleStateHandler 所产生的 IdleStateEvent 的处理逻辑.
@@ -72,23 +78,21 @@ public class IMClientHandler extends SimpleChannelInboundHandler<RawPacket> {
         }
     }
 
-
+    //心跳包
     protected void handleAllIdle(ChannelHandlerContext ctx) {
-
         if (heartbeatManager.shouldHeartbeat()) {
             sendHeartbeat(ctx);
         }
-
     }
 
 
+    //连接失效，断开连接
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         ctx.fireChannelInactive();
         //这里重连,但是需要设置一个调度任务,固定时间(避免网络不好时频繁重连)
         String ip = "222.66.158.238";
-//        String ip = "10.33.5.223";
-
+        //String ip = "10.33.5.223";
 
         int port = 61613;
         try {
@@ -98,7 +102,6 @@ public class IMClientHandler extends SimpleChannelInboundHandler<RawPacket> {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
     }
 
     @Override
@@ -107,6 +110,7 @@ public class IMClientHandler extends SimpleChannelInboundHandler<RawPacket> {
         ctx.fireExceptionCaught(cause);
     }
 
+    //发送心跳包
     private void sendHeartbeat(ChannelHandlerContext ctx) {
         PingAdaptor ping = new PingAdaptor(null);
         try {

@@ -2,23 +2,33 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.jianfeng.cmsbusiness_android">
 
-    <uses-permission android:name="android.permission.INTERNET">
+    <!-- 允许程序防问网络 --> 
+    <uses-permission android:name="android.permission.INTERNET"/>
 
-    </uses-permission>
+    <!-- 允许程序获取网络状态 --> 
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" ></uses-permission>
 
-    <application
-        android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
-        android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-        <activity android:name=".rootMain.CMSRootMainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+    <!-- Wifi访问Socket权限  --> 
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"></uses-permission>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"></uses-permission>
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+    <!-- Wifi网络状态访问权限  -->
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"></uses-permission>
 
-    </application>
 
-</manifest>
+        <application
+            android:allowBackup="true"
+            android:icon="@mipmap/ic_launcher"
+            android:supportsRtl="true"
+            android:theme="@style/AppTheme">
+            <activity android:name=".rootMain.CMSRootMainActivity">
+                <intent-filter>
+                    <action android:name="android.intent.action.MAIN" />
+
+                    <category android:name="android.intent.category.LAUNCHER" />
+                </intent-filter>
+            </activity>
+
+        </application>
+
+    </manifest>

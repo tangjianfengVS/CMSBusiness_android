@@ -5,6 +5,7 @@ import android.content.Intent;
 
 import com.example.jianfeng.cmsbusiness_android.im.HeartbeatManager;
 import com.example.jianfeng.cmsbusiness_android.im.PayloadtoMap;
+import com.example.jianfeng.cmsbusiness_android.rootMain.CMSRootMainActivity;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
@@ -47,11 +48,11 @@ public class MessageSendHolder extends MessageHolder {
 //                    intent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND);
 //                    MyApplication.getContext().sendBroadcast(intent);
 //                }
-//                Logger.i(TAG, payloadtoMap.getPayloadMap() + "");
+////                Logger.i(TAG, payloadtoMap.getPayloadMap() + "");
 //                intent.putExtra("send", "申请成功");
 //                intent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND);
-//                MyApplication.getContext().sendBroadcast(intent);
-//                //执行一次接收
+//                CMSRootMainActivity.getContext().sendBroadcast(intent);
+                //执行一次接收
                 //我注释--------
                 return true;
             }

@@ -4,6 +4,7 @@ import android.content.Intent;
 
 import com.example.jianfeng.cmsbusiness_android.im.HeartbeatManager;
 import com.example.jianfeng.cmsbusiness_android.im.PayloadtoMap;
+import com.example.jianfeng.cmsbusiness_android.rootMain.CMSRootMainActivity;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
@@ -39,32 +40,32 @@ public class MessageInvokeHolder extends MessageHolder {
                 KeyBean bean = new KeyBean();
 
                 //----------我注释
-//                bean.setSecureId(MainActivity.secureid);
-//                bean.setRandomKey(MainActivity.randomkey);
-//                payloadtoMap.setKeyMap(bean.toMap());
-//                try {
-//                    payloadtoMap.preRead(null);
-//                } catch (Exception NullPointerException) {
-//                    intent.putExtra("msg", "网络请求超时");
-//                    intent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND);
-//                    MyApplication.getContext().sendBroadcast(intent);
-//                }
+                bean.setSecureId(388);//MainActivity.secureid);
+                bean.setRandomKey("q4hynprjkoq1in4z");//MainActivity.randomkey);
+                payloadtoMap.setKeyMap(bean.toMap());
+                try {
+                    payloadtoMap.preRead(null);
+                } catch (Exception NullPointerException) {
+                    intent.putExtra("msg", "网络请求超时");
+                    intent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND);
+                    CMSRootMainActivity.getContext().sendBroadcast(intent);
+                }
 //                Logger.i(TAG, payloadtoMap.getPayloadMap().toString());
-//                if (((Map) payloadtoMap.getPayloadMap().get("BaseResponse")).get("Ret").toString().equals("0")) {
-//                    if (payloadtoMap.getPayloadMap().get("InvokeList") != null || !payloadtoMap.getPayloadMap().get("InvokeList").equals("")) {
-//                        intent.putExtra("Invoke", (Serializable) payloadtoMap.getPayloadMap());
-//                        intent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND);
-//                        MyApplication.getContext().sendBroadcast(intent);
-//                    } else {
-//                        intent.putExtra("msg", "请求失败");
-//                        intent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND);
-//                        MyApplication.getContext().sendBroadcast(intent);
-//                    }
-//                } else {
-//                    intent.putExtra("msg", "网络异常，请重新加载");
-//                    intent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND);
-//                    MyApplication.getContext().sendBroadcast(intent);
-//                }
+                if (((Map) payloadtoMap.getPayloadMap().get("BaseResponse")).get("Ret").toString().equals("0")) {
+                    if (payloadtoMap.getPayloadMap().get("InvokeList") != null || !payloadtoMap.getPayloadMap().get("InvokeList").equals("")) {
+                        intent.putExtra("Invoke", (Serializable) payloadtoMap.getPayloadMap());
+                        intent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND);
+                        CMSRootMainActivity.getContext().sendBroadcast(intent);
+                    } else {
+                        intent.putExtra("msg", "请求失败");
+                        intent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND);
+                        CMSRootMainActivity.getContext().sendBroadcast(intent);
+                    }
+                } else {
+                    intent.putExtra("msg", "网络异常，请重新加载");
+                    intent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND);
+                    CMSRootMainActivity.getContext().sendBroadcast(intent);
+                }
                 //-------------
 
 

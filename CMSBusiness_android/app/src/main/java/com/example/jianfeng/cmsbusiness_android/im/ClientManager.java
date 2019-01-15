@@ -1,5 +1,6 @@
 package com.example.jianfeng.cmsbusiness_android.im;
 
+import com.example.jianfeng.cmsbusiness_android.im.helper.ImResultHandler;
 import com.pythonsh.common.ApplicationException;
 import com.pythonsh.common.Constant;
 import com.pythonsh.common.RawPacketDecoder;
@@ -22,6 +23,9 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
+import io.netty.handler.codec.serialization.ClassResolvers;
+import io.netty.handler.codec.serialization.ObjectDecoder;
+import io.netty.handler.codec.serialization.ObjectEncoder;
 import io.netty.handler.timeout.IdleStateHandler;
 
 
@@ -34,34 +38,44 @@ import io.netty.handler.timeout.IdleStateHandler;
  */
 public class ClientManager {
     private static final Bootstrap bootstrap = new Bootstrap();
+
     private static ChannelFutureListener channelFutureListener = null;
+
     private static NioEventLoopGroup workGroup = new NioEventLoopGroup(4);
+
     private static ChannelFuture future = null;
+
     private static HeartbeatManager heartbeatManager = new HeartbeatManager();
 
-    public static void start(final String serverIp, final int port) throws InterruptedException {
+
+    private SocketChannel socketChannel;
+
+    public static void start(final String serverIp, final int port, final ImResultHandler handler) throws InterruptedException {
         bootstrap
                 .group(workGroup)
                 .channel(NioSocketChannel.class)
                 .option(ChannelOption.SO_KEEPALIVE, true)
                 .option(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT)
                 .handler(new ChannelInitializer<SocketChannel>() {
+
+                    /** 结果处理调用设置 */
                     protected void initChannel(SocketChannel socketChannel) throws Exception {
                         ChannelPipeline p = socketChannel.pipeline();
                         p.addLast(new IdleStateHandler(0, 0, HeartbeatManager.HEARTBEAT_MIN));
                         p.addLast(new LengthFieldBasedFrameDecoder(10 * 1024 * 1024, 0, 4, -4, 0));
                         p.addLast(new RawPacketDecoder());
-                        p.addLast(new IMClientHandler(heartbeatManager));
-
+                        p.addLast(new IMClientHandler(heartbeatManager)); //设置回调结果对象
                     }
                 });
 
         channelFutureListener = new ChannelFutureListener() {
             public void operationComplete(ChannelFuture f) throws Exception {
-
                 if (f.isSuccess()) {
-                    System.out.print("ssssss");
+                    //连接成功
+                    handler.connect(true);
                 } else {
+                    handler.connect(false);
+                    //连接失败，重新连接
                     f.channel().eventLoop().schedule(new Runnable() {
                         @Override
                         public void run() {
@@ -73,9 +87,9 @@ public class ClientManager {
         };
 
         doConnect(serverIp, port);
-
     }
 
+    /** 发起连接 */
     public static void doConnect(String serverIP, int port) {
 
         try {
@@ -86,13 +100,13 @@ public class ClientManager {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     public static Channel getChannel() throws InterruptedException {
         return future.sync().channel();
     }
 
+    /** 消息write */
     public static void write(BaseAdaptor base) throws InterruptedException, ApplicationException {
         if (base.isInitialBeforeWrite())
             base.checkHeaderIfInitialized();
@@ -100,10 +114,12 @@ public class ClientManager {
         ((OutboundAdaptor)base).preWrite(null);
         AdaptorContext context = new AdaptorContext(getChannel(),null, null, base);
             try {
-            base.writeAndFlush(context);
-            if (base.getRawPacket().getOptrType() == Constant.TYPE_PING) {
-                heartbeatManager.increaseTotal();
-            }
+                base.writeAndFlush(context);
+
+                /** 心跳包 */
+                if (base.getRawPacket().getOptrType() == Constant.TYPE_PING) {
+                    heartbeatManager.increaseTotal();
+                }
         } catch (Exception e) {
             e.printStackTrace();
         }

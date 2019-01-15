@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F5F5F5">
+
+
+    <EditText
+        android:id="@+id/seachEditText"
+        android:layout_height="30dp"
+        android:layout_width="match_parent"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:layout_marginTop="8dp"
+        android:background="#FFF"
+    />
+
+    <RelativeLayout
+        android:id="@+id/seachCoverView"
+        android:layout_height="52dp"
+        android:layout_width="match_parent"
+        android:layout_alignTop="@+id/seachEditText"
+        android:layout_marginTop="40dp"
+        android:background="#FFF">
+
+        <ImageView
+            android:id="@+id/seachImageView"
+            android:layout_width="39dp"
+            android:layout_height="39dp"
+            android:layout_marginTop="6dp"
+            android:layout_marginLeft="15dp"
+            android:src="@mipmap/contactsheader"
+        />
+
+        <TextView
+            android:id="@+id/seachTextView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignLeft="@+id/seachImageView"
+            android:layout_marginLeft="50dp"
+            android:text="新的朋友"
+            android:gravity="center_vertical|left"
+            android:textSize="15dp"
+            android:textStyle="bold"/>
+
+        <Button
+            android:id="@+id/seachBut"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#00000000"/>
+    </RelativeLayout>
+
+
+
+
+</RelativeLayout>

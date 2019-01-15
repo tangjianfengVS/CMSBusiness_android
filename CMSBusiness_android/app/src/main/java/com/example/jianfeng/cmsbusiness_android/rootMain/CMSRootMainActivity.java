@@ -3,6 +3,8 @@ package com.example.jianfeng.cmsbusiness_android.rootMain;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.graphics.Color;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.view.ViewGroup;
@@ -13,7 +15,6 @@ import com.example.jianfeng.cmsbusiness_android.R;
 import com.example.jianfeng.cmsbusiness_android.contacts.CMSContactsFragment;
 import com.example.jianfeng.cmsbusiness_android.hander.CMSClickHander;
 import com.example.jianfeng.cmsbusiness_android.hander.CMSLoginHander;
-import com.example.jianfeng.cmsbusiness_android.im.ClientManager;
 import com.example.jianfeng.cmsbusiness_android.im.helper.ImHelper;
 import com.example.jianfeng.cmsbusiness_android.loginInfo.CMSLoginNI;
 import com.example.jianfeng.cmsbusiness_android.loginInfo.CMSLoginView;
@@ -30,7 +31,7 @@ import java.util.Map;
 
 public class CMSRootMainActivity extends FragmentActivity {
 
-    private Context context;
+    public static Context context;
 
     private CMSLoginView loginView;
 
@@ -40,7 +41,6 @@ public class CMSRootMainActivity extends FragmentActivity {
 
     private WisdomTabBar tabBar;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,6 +49,10 @@ public class CMSRootMainActivity extends FragmentActivity {
         tabBarLayout = (RelativeLayout)findViewById(R.id.wisdomTabbar);
 
         setupUI();
+    }
+
+    public static Context getContext() {
+        return context;
     }
 
     private void setupUI(){
@@ -78,11 +82,11 @@ public class CMSRootMainActivity extends FragmentActivity {
 
     private void setCMSTabbar(){
         WisdomScreenUtils screenUtils = new WisdomScreenUtils();
-
         tabBar = new WisdomTabBar(context, getFragmentManager());
         tabBar.register(CMSMessageFragment.class, R.mipmap.success, R.mipmap.success, "消息" ,R.id.fragmentLayout);
-        tabBar.register(CMSContactsFragment.class, R.mipmap.success, R.mipmap.success, "通讯录",R.id.fragmentLayout);
+        tabBar.register(CMSContactsFragment.class, R.mipmap.addressbook, R.mipmap.addressbook_set, "通讯录",R.id.fragmentLayout);
         tabBar.register(CMSMineFragment.class, R.mipmap.success, R.mipmap.success, "我的", R.id.fragmentLayout);
+        tabBar.selectColor = Color.parseColor("#1E90FF");
         tabBar.setup();
         tabBarLayout.addView(tabBar, screenUtils.getScreenWidthPixels(context), screenUtils.dip2px(context, 49));
     }
@@ -103,7 +107,11 @@ public class CMSRootMainActivity extends FragmentActivity {
 
     /** 发起长连接 */
     private void setIM(){
-        ImHelper.shared().connect();
+        IntentFilter myIntentFilter = new IntentFilter();
+        myIntentFilter.addAction("com.admin.cmsbusiness_android.IMINIT");
+        //注册广播
+        registerReceiver(mBroadcastReceiver, myIntentFilter);
+        ImHelper.shared().connect(context);
     }
 
     private void mianUpdateUI(){
@@ -134,7 +142,7 @@ public class CMSRootMainActivity extends FragmentActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            if (action.equals("com.admin.cmsandroid.init")) {
+            if (action.equals("com.admin.cmsandroid.IMINIT")) {
                 //loading.dismiss();
 
                 ArrayList ContactList = new ArrayList<>();
