@@ -1,9 +1,11 @@
 package com.example.jianfeng.cmsbusiness_android.contacts;
 
+import java.io.Serializable;
+
 /**
  * Created by jianfeng on 19/1/1.
  */
-public class CMSContactsVO {
+public class CMSContactsVO implements Serializable {
 
     public String UserID;
     public String NickName;

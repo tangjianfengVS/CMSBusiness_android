@@ -10,6 +10,7 @@ import com.example.jianfeng.cmsbusiness_android.contacts.CMSContactsVO;
 
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -54,7 +55,7 @@ public class CMSSQLManager extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         /** 建表 */
-        db.execSQL("create table if not exists " + ContactsListTabName + " (ContactsList integer primary key autoincrement)");
+        db.execSQL("create table if not exists " + ContactsListTabName + "(UserID text primary key autoincrement, Contacts blob)");
         Toast.makeText(myContent, "数据库和表创建成功", Toast.LENGTH_SHORT).show();
     }
 
@@ -64,25 +65,41 @@ public class CMSSQLManager extends SQLiteOpenHelper {
     }
 
     /**
+     * 更新
+     * @param contacts
+     */
+    public void updateContacts(List<CMSContactsVO> contacts) {
+        for (int i = 0; i < contacts.size(); i++) {
+
+        }
+    }
+
+    /**
      * 保存 ， 插入
      * @param contacts
      */
     public void saveContacts(List<CMSContactsVO> contacts) {
-        ByteArrayOutputStream arrayOutputStream = new ByteArrayOutputStream();
+
         try {
-            ObjectOutputStream objectOutputStream = new ObjectOutputStream(arrayOutputStream);
-            objectOutputStream.writeObject(contacts);
-            objectOutputStream.flush();
-            byte data[] = arrayOutputStream.toByteArray();
-            objectOutputStream.close();
-            arrayOutputStream.close();
             SQLiteDatabase database = instance.getWritableDatabase();
-            database.execSQL("insert into " + ContactsListTabName + "(ContactsList) values(?)", new Object[] {
-                 data
-            });
+
+            for(CMSContactsVO VO:contacts){
+                String userID = VO.UserID;
+                ByteArrayOutputStream arrayOutputStream = new ByteArrayOutputStream();
+
+                ObjectOutputStream objectOutputStream = new ObjectOutputStream(arrayOutputStream);
+                objectOutputStream.writeObject(VO);
+                objectOutputStream.flush();
+                byte data[] = arrayOutputStream.toByteArray();
+                objectOutputStream.close();
+                arrayOutputStream.close();
+
+                Object obj = new Object[] { data };
+                database.execSQL("insert into " + ContactsListTabName + "(UserID,Contacts) values('" + userID + "'," + "'"+ obj +"'");
+            }
+
             database.close();
         } catch (Exception e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
