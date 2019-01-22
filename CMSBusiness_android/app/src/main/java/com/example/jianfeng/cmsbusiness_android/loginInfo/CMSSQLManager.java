@@ -95,7 +95,8 @@ public class CMSSQLManager extends SQLiteOpenHelper {
                 arrayOutputStream.close();
 
                 Object obj = new Object[] { data };
-                database.execSQL("insert into " + ContactsListTabName + "(UserID,Contacts) values('" + userID + "'," + "'"+ obj +"'");
+                String sql = "insert into " + ContactsListTabName + " (UserID,Contacts) values('" + userID + "'," + obj+")";
+                database.execSQL(sql);
             }
 
             database.close();
