@@ -81,9 +81,28 @@ public class CMSSQLManager extends SQLiteOpenHelper {
      * @param contacts
      */
     public void updateContacts(List<CMSContactsVO> contacts) {
-        for (int i = 0; i < contacts.size(); i++) {
+        SQLiteDatabase db = getWritableDatabase();
 
+        try {
+            for(CMSContactsVO VO:contacts) {
+                String userID = VO.UserID;
+                ByteArrayOutputStream arrayOutputStream = new ByteArrayOutputStream();
+
+                ObjectOutputStream objectOutputStream = new ObjectOutputStream(arrayOutputStream);
+                objectOutputStream.writeObject(VO);
+                objectOutputStream.flush();
+                byte data[] = arrayOutputStream.toByteArray();
+                objectOutputStream.close();
+                arrayOutputStream.close();
+
+                Object[] obj = new Object[] { userID, data };
+                String sql = "UPDATE " + ContactsListTabName + " SET UserID = ?, Contacts = ? WHERE id IN (SELECT id FROM student ORDER BY id ASC LIMIT 0,1000";
+                db.execSQL(sql,obj);
+            }
+        } catch(Exception e) {
+            e.printStackTrace();
         }
+        db.close(); // 关闭数据库
     }
 
     /**
