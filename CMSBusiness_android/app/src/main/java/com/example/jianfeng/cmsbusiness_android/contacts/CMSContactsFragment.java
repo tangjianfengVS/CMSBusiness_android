@@ -49,7 +49,7 @@ public class CMSContactsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.contactsfragment, container, false);
         listView = (ListView)view.findViewById(R.id.ListView);
-        contactsVOLsit = new ArrayList();
+        contactsVOLsit = CMSSQLManager.shared(getContext()).loadContacts();
         setupUI();
         return view;
     }
@@ -67,7 +67,6 @@ public class CMSContactsFragment extends Fragment {
         getContext().registerReceiver(mBroadcastReceiver, myIntentFilter);
 
         //WisdomScreenUtils screenUtils = new WisdomScreenUtils();
-
         CMSContactsAdapter adapter = new CMSContactsAdapter(getContext(), R.layout.contactsadapter, contactsVOLsit);
         listView.setAdapter(adapter);
 
@@ -109,8 +108,7 @@ public class CMSContactsFragment extends Fragment {
                  * 如果不存在则创建该数据库并调用 onCreate() 方法
                  * 同时Book表也会被创建
                  */
-                CMSSQLManager.getInstens(getContext()).saveContacts(list);
-
+                CMSSQLManager.shared(getContext()).saveContacts(list);
             }
         }
     };

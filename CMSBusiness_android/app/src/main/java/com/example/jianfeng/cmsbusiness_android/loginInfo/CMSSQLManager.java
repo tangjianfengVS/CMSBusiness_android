@@ -8,7 +8,9 @@ import android.widget.Toast;
 
 import com.example.jianfeng.cmsbusiness_android.contacts.CMSContactsVO;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,8 +19,8 @@ import java.util.List;
  * Created by jianfeng on 19/1/13.
  */
 public class CMSSQLManager extends SQLiteOpenHelper {
-    private static String name = "CMSBusinessTest.db";             //库名
-    private static String ContactsListTabName = "CMSContactsList"; //联系人表名
+    private static String name = "CMSBusinessTest2.db";             //库名
+    private static String ContactsListTabName = "CMSContactsList2"; //联系人表名
     private static int version = 1;
     private Context myContent;
 
@@ -39,7 +41,11 @@ public class CMSSQLManager extends SQLiteOpenHelper {
     //        + "pages integer,"
     //        + "name text )";
 
-    public static CMSSQLManager getInstens(Context context) {
+    private String ContactTabCreateSQL = "create table if not exists " + ContactsListTabName + " (ContactId integer primary key autoincrement, UserID text, Contacts blob)";
+
+
+    /** --------------------单列的创建-----------------  */
+    public static CMSSQLManager shared(Context context) {
         if (instance == null) {
             instance = new CMSSQLManager(context);
         }
@@ -54,14 +60,20 @@ public class CMSSQLManager extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        /** 建表 */
-        db.execSQL("create table if not exists " + ContactsListTabName + "(UserID text primary key autoincrement, Contacts blob)");
+        /** 建表 not create and not execute if system has tab */
+        db.execSQL(ContactTabCreateSQL);
         Toast.makeText(myContent, "数据库和表创建成功", Toast.LENGTH_SHORT).show();
     }
 
+    /*  onUpgrade:数据库版本发生变化时调用该方法,该方法特别适合做表结构的修改
+     *  public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+     *  执行sql语句做表结构的修改   数据库版本也需要同时变更  才会起作用
+     *  db.execSQL("alter table user add phone varchar(20)");
+     *  System.out.println("旧版本:" + oldVersion + "新版本+" + newVersion);
+     */
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
+        onCreate(db);
     }
 
     /**
@@ -81,7 +93,7 @@ public class CMSSQLManager extends SQLiteOpenHelper {
     public void saveContacts(List<CMSContactsVO> contacts) {
 
         try {
-            SQLiteDatabase database = instance.getWritableDatabase();
+            SQLiteDatabase database = getWritableDatabase();
 
             for(CMSContactsVO VO:contacts){
                 String userID = VO.UserID;
@@ -94,11 +106,10 @@ public class CMSSQLManager extends SQLiteOpenHelper {
                 objectOutputStream.close();
                 arrayOutputStream.close();
 
-                Object obj = new Object[] { data };
-                String sql = "insert into " + ContactsListTabName + " (UserID,Contacts) values('" + userID + "'," + obj+")";
-                database.execSQL(sql);
+                Object[] obj = new Object[] { userID, data };
+                String sql = "insert into " + ContactsListTabName + "(UserID, Contacts) values(?,?)";
+                database.execSQL(sql, obj);
             }
-
             database.close();
         } catch (Exception e) {
             e.printStackTrace();
@@ -106,15 +117,35 @@ public class CMSSQLManager extends SQLiteOpenHelper {
     }
 
     /**
-     * 数据库查询
+     * 数据库查询所以联系人
      * @param
      */
-    public void queryDb() {
-        Cursor cursor = instance.getWritableDatabase().rawQuery("select * from " + ContactsListTabName, null);
-        while (cursor.moveToNext()) {
-            String contactsList = cursor.getString(cursor.getColumnIndex("ContactsList"));
+    public List<CMSContactsVO> loadContacts() {
+        SQLiteDatabase database = getReadableDatabase();
+        ArrayList<CMSContactsVO> list = new ArrayList<CMSContactsVO>();
 
-            System.out.print(contactsList);
+        Cursor cursor = database.rawQuery("select * from " + ContactsListTabName, null);
+
+        if (cursor!=null && cursor.getCount()>0) {
+
+            try {
+                while (cursor.moveToNext()) {
+                    String userId = cursor.getString(cursor.getColumnIndex("UserID"));
+
+                    byte[] contactsByte = cursor.getBlob(cursor.getColumnIndex("Contacts"));
+                    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(contactsByte); // 创建ByteArrayInputStream对象
+                    ObjectInputStream objectInputStream = new ObjectInputStream(byteArrayInputStream);  // 创建ObjectInputStream对象
+                    CMSContactsVO object = (CMSContactsVO) objectInputStream.readObject();              // 从objectInputStream流中读取一个对象
+                    byteArrayInputStream.close();           // 关闭输入流
+                    objectInputStream.close();              // 关闭输入流
+                    list.add(object);
+                }
+                cursor.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            database.close();
         }
+        return list;
     }
 }
